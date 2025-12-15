@@ -27,18 +27,15 @@ $(TARGET): $(OBJ) | $(BIN_DIR)
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Create build/ and bin/ directories if they don't exist
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 
 $(BIN_DIR):
 	mkdir -p $(BIN_DIR)
 
-# Clean everything
 clean:
 	rm -rf $(BUILD_DIR) $(BIN_DIR)
 
-# Optional: format code
 indent:
 	indent -linux -i4 -nut -ts2 $(SRC_DIR)/*.c
 
