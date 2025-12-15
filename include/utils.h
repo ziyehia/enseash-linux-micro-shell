@@ -1,3 +1,3 @@
 
 void myprint(const char *s);
-char *myscan(void);
+ssize_t myscan(char *buff, size_t size);

@@ -8,25 +8,29 @@
 #define BUFSIZE 128
 
 void welcome_prompt(void){
-    myprint("Welcome to enseash!\n\r");
+    myprint("Welcome to enseash!\n\rTo exit, type 'exit'\n\r");
 
 }
 
-void exit_scan(void){
-    myprint("To exit, type 'exit'\n\r");
+void input_scan(void){
+
+    myprint("enseash % ");
+
     char user_input[BUFSIZE];
-    char *input = myscan();
 
-     if (!input)
-        return;
+    ssize_t n = myscan(user_input, BUFSIZE);
 
-    strcpy(user_input, input);
-    free(input);
-
-    if (strcmp(user_input, "exit\n") == 0 ||
-        strcmp(user_input, "exit") == 0) {
+    if ( n == 0 ) {     // n = 0 means ctrl+D was pressed
+        myprint("\nsee you soon ;)\n");
         exit(EXIT_SUCCESS);
-    } else {
+    } 
+
+    if ( strcmp(user_input, "exit\n") == 0) {    
+        myprint("see you soon ;)\n");
+        exit(EXIT_SUCCESS);
+    } 
+    
+    else {
         myprint("invalid command\n");
     }
 }

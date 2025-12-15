@@ -15,15 +15,16 @@ void myprint(const char *s){
     }
 }
 
-char *myscan(void){ 
-    char *buff = malloc(BUFSIZE);
-    
-    if((read(STDIN_FILENO, buff, BUFSIZE)) == -1){
+ssize_t myscan(char *buff, size_t size){ 
+
+    ssize_t n = read(STDIN_FILENO, buff, size);
+
+    if(n == -1){
         perror("read");
-        free(buff);
-        return NULL;
+        return -1;
     }
 
-    return buff;
+    buff[n] = '\0';                            //required for a working strcmp
+    return n;
 }
 

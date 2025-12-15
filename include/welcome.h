@@ -1,3 +1,3 @@
 
 void welcome_prompt(void);
-void exit_scan(void);
+void input_scan(void);
