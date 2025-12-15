@@ -16,12 +16,14 @@ void myprint(const char *s){
 }
 
 char *myscan(void){ 
-    size_t nbytes = BUFSIZE;
-    char *buff[nbytes];
-    if((read(STDOUT_FILENO, buff, nbytes)) == -1){
+    char *buff = malloc(BUFSIZE);
+    
+    if((read(STDIN_FILENO, buff, BUFSIZE)) == -1){
         perror("read");
+        free(buff);
+        return NULL;
     }
 
-    return *buff;
+    return buff;
 }
 
