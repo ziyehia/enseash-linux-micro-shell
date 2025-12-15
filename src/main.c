@@ -1,4 +1,4 @@
-#include "welcome.h"
+#include "shell.h"
 
 int main(){
     welcome_prompt();

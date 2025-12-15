@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <unistd.h>
 #include <string.h>
 
@@ -28,3 +29,17 @@ ssize_t myscan(char *buff, size_t size){
     return n;
 }
 
+void command_no_arg_exec(const char *file, const char *arg0){
+    
+    int pid, status;
+    pid = fork();
+
+    if (pid != 0){                                 //parent code
+        wait(&status);
+    } else {                                       //child code
+        execlp(file, arg0, (char *)NULL);
+        perror(file);
+        exit(EXIT_SUCCESS);
+    }
+
+}
