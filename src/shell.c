@@ -1,16 +1,5 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <time.h>
-
-
-#include "utils.h"
-
-#define BUFSIZE 128
-#define ERR_SIG_BUFSIZE 4
-#define TIME_BUFSIZE 32
+#include "config.h"
+#include <linux/limits.h>
 
 void welcome_prompt(void){
     myprint("Welcome to enseash!\n\rTo exit, type 'exit'\n\renseash % ");
@@ -33,14 +22,27 @@ void input_scan(void){
         exit(EXIT_SUCCESS);
     } 
 
+    if (user_input[0] == '\0') {
+        myprint("You pressed Enter with nothing :P \n");
+        myprint("enseash % "); 
+        return;
+    }
+
 
     
     else {
+
+        char *token = " ";
+        char *argv[ARG_MAX];
+        string_split(user_input, token, argv);
+
+
+
         struct timespec start, end;
         long exec_time_ms;                                               // struct timespec contains long values
 
         clock_gettime(CLOCK_MONOTONIC, &start);
-        int status = command_no_arg_exec(user_input, user_input);
+        int status = command_exec(argv[0], argv);
         clock_gettime(CLOCK_MONOTONIC, &end);
 
         exec_time_ms = timespec_diff_ms(&start, &end);                   

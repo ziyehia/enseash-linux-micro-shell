@@ -1,14 +1,4 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <unistd.h>
-#include <string.h>
-#include <time.h>
-
-#include "utils.h"
-
-#define BUFSIZE 128
+#include "config.h"
 
 void myprint(const char *s){
 /* this is a simple print function to print in console*/
@@ -70,14 +60,43 @@ long timespec_diff_ms(struct timespec *start, struct timespec *end){
 
 }
 
+void string_split(char s[], char *token, char *split[]){
+/* function to split a continuous string into an array of different strings (array of pointers)*/
+/* arguments: char s[] is the string to split, char *token in the token used to split, char split[] is where the split string is wished to be stored*/
+
+    int i = 0;
+  
+    token = strtok(s, " ");                          // isolate first word, the command in our application
+    
+    while (token != NULL && i < ARG_MAX - 1) {
+        split[i] = token; 
+        i++;
+        token = strtok(NULL, " ");                   // isolate a word when space is detected
+    }
+
+    split[i] = NULL;                                          // add NULL at the end so it's compatible with execvp
+
+}
 
 
+int command_exec(const char *file, char *argv[]){
+/*this function is to executes commands with arguments in our custom shell in a child process*/
 
+    int pid, status;
+    pid = fork();
 
+    if (pid != 0){                                 //parent code
+        wait(&status);
 
+    } else {                                       //child code
+        execvp(file, argv);
+        perror(file);
+        exit(EXIT_FAILURE);
+    }
 
+    return status;
 
-
+}
 
 
 
