@@ -106,7 +106,7 @@ int command_exec(const char *file, char *argv[], char *output_file){
         }
  
 
-
+    // execution 
         execvp(file, argv);
         perror(file);
         exit(EXIT_FAILURE);

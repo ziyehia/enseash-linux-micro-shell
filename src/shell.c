@@ -57,12 +57,17 @@ void input_scan(void){
             }
         }
 
+        // end of treatment
 
+
+        // params to calculate executation time
         struct timespec start, end;
         long exec_time_ms;                                               // struct timespec contains long values
 
         clock_gettime(CLOCK_MONOTONIC, &start);
+
         int status = command_exec(argv[0], argv, output_file);
+
         clock_gettime(CLOCK_MONOTONIC, &end);
 
         exec_time_ms = timespec_diff_ms(&start, &end);                   
@@ -70,6 +75,7 @@ void input_scan(void){
         itoa_long(exec_time_ms, time_ms_buf);                            // for itoa_long(), check utils.c
         
 
+        // console output
         myprint("enseash ");
         if (WIFEXITED(status)) {
             char buffer[ERR_SIG_BUFSIZE];
