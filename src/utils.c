@@ -79,7 +79,7 @@ void string_split(char s[], char *token, char *split[]){
 }
 
 
-int command_exec(const char *file, char *argv[]){
+int command_exec(const char *file, char *argv[], char *output_file){
 /*this function is to executes commands with arguments in our custom shell in a child process*/
 
     int pid, status;
@@ -89,6 +89,24 @@ int command_exec(const char *file, char *argv[]){
         wait(&status);
 
     } else {                                       //child code
+
+    // redirection if output file precised
+        if (output_file != NULL) {
+            int fd = open(output_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+            if (fd == -1) {
+                perror("open"); 
+                exit(EXIT_FAILURE);
+            }
+
+            if (dup2(fd, STDOUT_FILENO) == -1) {                     //copies fd on STDOUT_FILENO  and closes STDOUT_FILENO
+                perror("dup2");
+                exit(EXIT_FAILURE);
+            }
+            close(fd);
+        }
+ 
+
+
         execvp(file, argv);
         perror(file);
         exit(EXIT_FAILURE);

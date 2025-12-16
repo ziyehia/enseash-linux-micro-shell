@@ -38,11 +38,31 @@ void input_scan(void){
 
 
 
+        // treating redirection with > 
+        char *output_file = NULL;
+
+        for (int i = 0; argv[i] != NULL; i++) {
+            if (strcmp(argv[i], ">") == 0) {
+    
+                if (argv[i+1] != NULL) {
+                    output_file = argv[i+1];
+                } else {
+                    myprint("Error: No file specified after >\n");
+                    return; 
+                }
+
+                argv[i] = NULL; 
+                
+                break; 
+            }
+        }
+
+
         struct timespec start, end;
         long exec_time_ms;                                               // struct timespec contains long values
 
         clock_gettime(CLOCK_MONOTONIC, &start);
-        int status = command_exec(argv[0], argv);
+        int status = command_exec(argv[0], argv, output_file);
         clock_gettime(CLOCK_MONOTONIC, &end);
 
         exec_time_ms = timespec_diff_ms(&start, &end);                   

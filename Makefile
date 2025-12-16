@@ -13,7 +13,7 @@ SRC = $(wildcard $(SRC_DIR)/*.c)
 OBJ = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRC))
 
 # Executable name
-TARGET = my_program
+TARGET = enseash
 
 # Default target
 all: $(TARGET)

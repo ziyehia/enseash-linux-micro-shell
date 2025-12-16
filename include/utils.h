@@ -6,4 +6,4 @@ long timespec_diff_ms(struct timespec *start, struct timespec *end);
 void itoa(int n, char s[]);
 void itoa_long(long n, char s[]);
 void string_split(char s[], char *token, char *split[]);
-int command_exec(const char *file, char *argv[]);
+int command_exec(const char *file, char *argv[], char *output_file);
