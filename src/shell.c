@@ -36,24 +36,37 @@ void input_scan(void){
         char *argv[ARG_MAX]; 
         string_split(user_input, token, argv);
 
-
-
-        // treating redirection with > 
+        // treating redirections
+        char *input_file = NULL;
         char *output_file = NULL;
 
         for (int i = 0; argv[i] != NULL; i++) {
-            if (strcmp(argv[i], ">") == 0) {
+
+            // treating redirection with <
+            if (strcmp(argv[i], "<") == 0) {
+                if (argv[i+1] == NULL) {
+                    myprint("Error: No file specified after <\n");
+                    myprint("enseash % ");
+                    return;
+                }
+                input_file = argv[i+1];  
+                argv[i] = NULL;          
+            }
+               
+            // treating redirection with >
+            else if (strcmp(argv[i], ">") == 0) {
     
                 if (argv[i+1] != NULL) {
                     output_file = argv[i+1];
                 } else {
                     myprint("Error: No file specified after >\n");
+                    myprint("enseash % ");
                     return; 
                 }
 
                 argv[i] = NULL; 
                 
-                break; 
+            
             }
         }
 
@@ -66,7 +79,7 @@ void input_scan(void){
 
         clock_gettime(CLOCK_MONOTONIC, &start);
 
-        int status = command_exec(argv[0], argv, output_file);
+        int status = command_exec(argv[0], argv, input_file, output_file);
 
         clock_gettime(CLOCK_MONOTONIC, &end);
 

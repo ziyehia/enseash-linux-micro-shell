@@ -79,7 +79,7 @@ void string_split(char s[], char *token, char *split[]){
 }
 
 
-int command_exec(const char *file, char *argv[], char *output_file){
+int command_exec(const char *file, char *argv[], char *input_file, char *output_file){
 /*this function is to executes commands with arguments in our custom shell in a child process*/
 
     int pid, status;
@@ -90,19 +90,37 @@ int command_exec(const char *file, char *argv[], char *output_file){
 
     } else {                                       //child code
 
+
+    // redirection if input file precised
+        if (input_file != NULL) {
+            int fd_in = open(input_file, O_RDONLY);
+            if ( fd_in == -1) {
+                perror("open");
+                exit(EXIT_FAILURE);
+            }
+
+            if (dup2(fd_in, STDIN_FILENO) == -1) {                     //copies fd_in on STDIN_FILENO  and closes STDIN_FILENO
+                perror("dup2");
+                exit(EXIT_FAILURE);
+            }
+            close(fd_in);
+
+
+        }
+
     // redirection if output file precised
         if (output_file != NULL) {
-            int fd = open(output_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-            if (fd == -1) {
+            int fd_out = open(output_file, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);     // write only, create if does not exist, delete old file content, make file private, read and write perms for user only 
+            if (fd_out == -1) {
                 perror("open"); 
                 exit(EXIT_FAILURE);
             }
 
-            if (dup2(fd, STDOUT_FILENO) == -1) {                     //copies fd on STDOUT_FILENO  and closes STDOUT_FILENO
+            if (dup2(fd_out, STDOUT_FILENO) == -1) {                     
                 perror("dup2");
                 exit(EXIT_FAILURE);
             }
-            close(fd);
+            close(fd_out);
         }
  
 
@@ -152,6 +170,7 @@ void itoa(int n, char s[])
 }  
 
 /* itoa() for long conversion function*/
+/* adapted by Author*/
 void itoa_long(long n, char s[])
  {
      int i, sign;
