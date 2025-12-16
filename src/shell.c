@@ -32,8 +32,8 @@ void input_scan(void){
     
     else {
 
-        char *token = " ";
-        char *argv[ARG_MAX];
+        char *token = " ";  
+        char *argv[ARG_MAX]; 
         string_split(user_input, token, argv);
 
 

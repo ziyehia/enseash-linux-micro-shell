@@ -5,7 +5,6 @@ CFLAGS = -Wall -Wextra -g -Iinclude
 # Directories
 SRC_DIR = src
 BUILD_DIR = build
-BIN_DIR = bin
 
 # Source files
 SRC = $(wildcard $(SRC_DIR)/*.c)
@@ -14,7 +13,7 @@ SRC = $(wildcard $(SRC_DIR)/*.c)
 OBJ = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRC))
 
 # Executable name
-TARGET = $(BIN_DIR)/my_program
+TARGET = my_program
 
 # Default target
 all: $(TARGET)
