@@ -1,7 +1,7 @@
 #include "config.h"
 
 void myprint(const char *s){
-/* this is a simple print function to print in console*/
+/* write a null-terminated string to STDOUT using write() */
 
     if(write(STDOUT_FILENO, s, strlen(s)) == -1){
         perror("write");
@@ -10,9 +10,9 @@ void myprint(const char *s){
 }
 
 ssize_t myscan(char *buff, size_t size){ 
-/* this is a simple scan function to scan user input in console, returns ssize_t n the output of the standard read function*/
+/* read user input from STDIN and null-terminate the buffer */
 
-    ssize_t n = read(STDIN_FILENO, buff, size);
+    ssize_t n = read(STDIN_FILENO, buff, size - 1);
 
     if(n == -1){
         perror("read");
@@ -24,7 +24,6 @@ ssize_t myscan(char *buff, size_t size){
 }
 
 int command_no_arg_exec(const char *file, const char *arg0){
-/* this function is to executes commands with no arguments in our custom shell in a child process*/
 
     int pid, status;
     pid = fork();
@@ -60,27 +59,27 @@ long timespec_diff_ms(struct timespec *start, struct timespec *end){
 
 }
 
-void string_split(char s[], char *token, char *split[]){
-/* function to split a continuous string into an array of different strings (array of pointers)*/
-/* arguments: char s[] is the string to split, char *token in the token used to split, char split[] is where the split string is wished to be stored*/
+void string_split(char s[], char *argv[]){
+/* split a command string into argv-compatible tokens*/
 
     int i = 0;
-  
-    token = strtok(s, " ");                          // isolate first word, the command in our application
+    char *token;
+
+    token = strtok(s, " ");
     
     while (token != NULL && i < ARG_MAX - 1) {
-        split[i] = token; 
+        argv[i] = token; 
         i++;
-        token = strtok(NULL, " ");                   // isolate a word when space is detected
+        token = strtok(NULL, " ");                            // isolate a word when space is detected
     }
 
-    split[i] = NULL;                                          // add NULL at the end so it's compatible with execvp
+    argv[i] = NULL;                                          // add NULL at the end so it's compatible with execvp
 
 }
 
 
 int command_exec(const char *file, char *argv[], char *input_file, char *output_file){
-/*this function is to executes commands with arguments in our custom shell in a child process*/
+/* execute a command with arguments and optional I/O redirection */
 
     int pid, status;
     pid = fork();
@@ -124,7 +123,7 @@ int command_exec(const char *file, char *argv[], char *input_file, char *output_
         }
  
 
-    // execution 
+    // command execution 
         execvp(file, argv);
         perror(file);
         exit(EXIT_FAILURE);
@@ -151,7 +150,7 @@ void reverse(char s[])
          s[i] = s[j];
          s[j] = c;
      }
-}  
+}
 
 void itoa(int n, char s[])
  {

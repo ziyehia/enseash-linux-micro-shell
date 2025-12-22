@@ -1,42 +1,45 @@
 #include "config.h"
-#include <linux/limits.h>
 
 void welcome_prompt(void){
-    myprint("Welcome to enseash!\n\rTo exit, type 'exit'\n\renseash % ");
+    myprint("Welcome to enseash!\nTo exit, type 'exit'\nenseash % ");
 
 }
 
 void input_scan(void){
     char user_input[BUFSIZE];
+    char *argv[ARG_MAX];
 
     ssize_t n = myscan(user_input, BUFSIZE);
+    if (n < 0) {
+        myprint("read error\n");
+        return;
+    }
+
     user_input[strcspn(user_input, "\n")] = '\0';        // to remove the \n at the end of user input : necessary for correctly reading commands
 
+    /* Ctrl+D */
     if ( n == 0 ) {                                                // n = 0 means ctrl+D was pressed
         myprint("\nsee you soon ;)\n");
         exit(EXIT_SUCCESS);
     } 
 
-    if ( strcmp(user_input, "exit") == 0) {    
-        myprint("see you soon ;)\n");
-        exit(EXIT_SUCCESS);
-    } 
+    string_split(user_input, argv);
 
-    if (user_input[0] == '\0') {
+    if (argv[0] == NULL) {
         myprint("You pressed Enter with nothing :P \n");
         myprint("enseash % "); 
         return;
     }
 
+    if (strcmp(argv[0], "exit") == 0) {    
+        myprint("see you soon ;)\n");
+        exit(EXIT_SUCCESS);
+    } 
 
     
     else {
 
-        char *token = " ";  
-        char *argv[ARG_MAX]; 
-        string_split(user_input, token, argv);
-
-        // treating redirections
+        // I/O redirections
         char *input_file = NULL;
         char *output_file = NULL;
 
@@ -70,10 +73,10 @@ void input_scan(void){
             }
         }
 
-        // end of treatment
+        // end I/O redirections
 
 
-        // params to calculate executation time
+        // execution time measurement
         struct timespec start, end;
         long exec_time_ms;                                               // struct timespec contains long values
 
