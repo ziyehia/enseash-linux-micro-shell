@@ -126,7 +126,7 @@ Contains utility functions used across the shell implementation.
   Splits a command line into an argument vector (`argv`) compatible with `execvp()`.
 - `command_exec()`  
   Executes a command in a child process and handles I/O redirections. Waits for termination in the parent process.  
-  Returns the status value to distinguis between normal termination and error or signal based terminations.
+  Returns the status value to distinguish between normal termination and error or signal based terminations.
 
 ## Shell call flow
 ```mermaid
